@@ -75,5 +75,5 @@ conf : {
 }
 ```
 
-jsConcatプロパティのキーはconf.path.src.jsからの相対的な出力パスです。
+jsConcatプロパティのキーはconf.path.src.jsからの相対的な出力パスです。  
 もし、キーを'concat/hoge.js'と設定したら、conf.path.src.js + concat/hoge.jsに出力されます。
