@@ -33,6 +33,10 @@ let conf = {
         'hoge.js' : [
             'concat/_patial.js',
             'concat/_patial2.js'
+        ],
+        'fuga.js' : [
+            'concat/_patial.js',
+            'concat/_patial2.js'
         ]
     }
 }
@@ -95,11 +99,14 @@ let optionInit = ()=>{
     };
 }
 
+// =============================================================================
+// "_"から始まるファイルが変更された場合、結合リストを参照してファイルを結合する
+// =============================================================================
 let preConcat = (file)=>{
     let fileName = path.basename(file.path);
     let cwd      = process.cwd();
-    let is        = /^_/.test(fileName);
-    if(!is) return !is;
+    let is       = /^_/.test(fileName);
+    if(!is) return is;
     let relativePath = path.relative(cwd, file.path);
     relativePath = path.relative(conf.path.src.js, relativePath);
     for(let key in conf.jsConcat){
@@ -118,9 +125,9 @@ let preConcat = (file)=>{
         }
         gulp.src(newList)
             .pipe(concat(key))
-            .pipe(gulp.dest(conf.path.src.js)).on('end', (file)=>{
-                // console.log(file);
-            });
+            .pipe(gulp.dest(conf.path.src.js)).on('end', function(){
+                conf.functions['js-build']('concat', key);
+            }, 1);
     }
     return is;
 
@@ -128,13 +135,21 @@ let preConcat = (file)=>{
 
 conf.functions = {
     // =========================================================================
-    'js-build' : function(a){
+    'js-build' : function(){
         if(conf.options.first) optionInit();
         let ops      = conf.options;
         let babelOps = ops.js.babel;
-        console.log(a);
-        let target = path.join(conf.path.src.js, '**/*.js');
-        let dest   = conf.path.dest.js;
+        let target;
+        let dest;
+        let var1 = arguments['0'];
+        let var2;
+        if(var1 === 'concat'){
+            var2   = arguments['1'];
+            target = path.join(conf.path.src.js, var2);
+        }else{
+            target = path.join(conf.path.src.js, '**/*.js');
+        }
+        dest = conf.path.dest.js;
         return gulp.src(target)
             .pipe( gulpIf( isWatching, changed(dest, ops.changed) ) )
             .pipe( ignore.exclude(preConcat) )

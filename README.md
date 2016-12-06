@@ -1,32 +1,28 @@
-Sass develop env.
+JS develop env.
 
 ## Usage
 
 ```bash
-$ npm run watch # watching sass file.
-$ npm run build # building sass file.
+$ npm run watch # watching js file.
+$ npm run build # building js file.
 ```
 
 ## change configuration
 
-if only use it. you will change code on withpro-gulp-sass.js.
+if only use it. you will change code on withpro-gulp-js.js.
 
 ```js
 conf : {
     'path' : {
         'project' : '/', // project root from web root.
         'src' : {
-            'sass' : 'src/sass',   // Sass files dir.
-            'font' : 'src/font',   // font files dir.
-            'lib'  : ['src/sass'], // Sass lib. dir.
+            'js' : 'src/js',   // js files dir.
         },
         'dest' : {
-            'css'   : 'build/css', // css files dir.
-            'image' : 'build/img', // image files dir.
-            'font'  : 'build/font' // font files dir. (outputed)
+            'js'   : 'build/js', // js files dir.
         }
     },
-    'browsers' : ['last 3 version'] // gulp-pleeeease support level.
+    'browsers' : ['last 3 version'] // support level.
 }
 ```
 
@@ -34,12 +30,11 @@ Not so, when you wanna use it as local module.
 
 ```js
 let gulp = require('gulp');
-let wgs  = require('withpro-gulp-sass');
+let wgj  = require('withpro-gulp-js');
 
 // -----------------------------------------------------------------------------
 // change configuration.
-// wgs.path.src.sass = 'assets/sass';
-// wgs.path.src.font = 'assets/font';
+// wgs.path.src.js = 'assets/js';
 // -----------------------------------------------------------------------------
 
 let keys = Object.keys(withproGulpSass.functions);
@@ -56,3 +51,29 @@ keys.forEach((key)=>{
     }
 });
 ```
+
+## Concatenate
+
+you can concatenate any files.
+
+1. partial files name is begin with "_".
+2. add set to concatenation config as follows.
+
+```
+conf : {
+    ...
+    'jsConcat' : {
+        'hoge.js' : [
+            'concat/_child1.js',
+            'concat/_child2.js'
+        ],
+        'fuga.js' : [
+            'concat/_child3.js',
+            'concat/_child4.js'
+        ]
+    }
+}
+```
+
+key of jsConcat property is output file name form conf.path.src.js.  
+if you set key as 'concat/hoge.js', output to conf.path.src.js + concat/hoge.js.
