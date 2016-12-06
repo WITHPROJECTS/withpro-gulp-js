@@ -7,7 +7,7 @@ $ npm run watch # watching js file.
 $ npm run build # building js file.
 ```
 
-## change configuration
+## Change configuration
 
 if only use it. you will change code on withpro-gulp-js.js.
 
@@ -30,14 +30,14 @@ Not so, when you wanna use it as local module.
 
 ```js
 let gulp = require('gulp');
-let wgj  = require('withpro-gulp-js');
+let wgjs = require('withpro-gulp-js');
 
 // -----------------------------------------------------------------------------
 // change configuration.
 // wgs.path.src.js = 'assets/js';
 // -----------------------------------------------------------------------------
 
-let keys = Object.keys(withproGulpSass.functions);
+let keys = Object.keys(wgjs.functions);
 keys.forEach((key)=>{
     let f = withproGulpSass.functions;
     if(Array.isArray(f[key])){
