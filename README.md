@@ -3,8 +3,8 @@ JS develop env.
 ## Usage
 
 ```bash
-$ npm run watch # watching js file.
-$ npm run build # building js file.
+$ npm run js-watch # watching js file.
+$ npm run js-build # building js file.
 ```
 
 ## Change configuration
@@ -75,5 +75,5 @@ conf : {
 }
 ```
 
-key of jsConcat property is output file name form conf.path.src.js.  
+key of jsConcat property is output file path form conf.path.src.js.  
 if you set key as 'concat/hoge.js', output to conf.path.src.js + concat/hoge.js.
