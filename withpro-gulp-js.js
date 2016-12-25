@@ -1,21 +1,21 @@
-let path       = require('path');
-let gulp       = require('gulp');
-let babel      = require('gulp-babel');
-let watch      = require('gulp-watch');
-let gulpIf     = require('gulp-if');
-let notifier   = require('node-notifier');
-let changed    = require('gulp-changed');
-let sourcemaps = require('gulp-sourcemaps');
-let plumber    = require('gulp-plumber');
-let colors     = require('colors');
-let concat     = require('gulp-concat');
-let ignore     = require('gulp-ignore');
-let remember   = require('gulp-remember');
-let isWatching = false;
+let path           = require('path');
+let notifier       = require('node-notifier');
+let colors         = require('colors');
+let gulp           = require('gulp');
+let gulpBabel      = require('gulp-babel');
+let gulpIf         = require('gulp-if');
+let gulpChanged    = require('gulp-changed');
+let gulpSourcemaps = require('gulp-sourcemaps');
+let gulpPlumber    = require('gulp-plumber');
+let gulpConcat     = require('gulp-concat');
+let gulpIgnore     = require('gulp-ignore');
+let runSequence    = require('run-sequence');
+let isWatching     = false;
+let isConcated     = false;
 
 // /////////////////////////////////////////////////////////////////////////////
 //
-// 設定
+// SETTING
 //
 // /////////////////////////////////////////////////////////////////////////////
 let conf = {
@@ -28,23 +28,12 @@ let conf = {
             'js' : 'build/js'
         }
     },
-    'browsers' : ['last 3 version'],
-    'jsConcat' : {
-        'hoge.js' : [
-            'concat/_patial.js',
-            'concat/_patial2.js'
-        ],
-        'fuga.js' : [
-            'concat/_patial.js',
-            'concat/_patial2.js'
-        ]
-    }
+    'browsers' : ['last 3 version']
 }
-
 
 // /////////////////////////////////////////////////////////////////////////////
 //
-// オプション
+// OPTIONS
 //
 // /////////////////////////////////////////////////////////////////////////////
 conf.options = { first : true }
@@ -57,9 +46,8 @@ let optionInit = ()=>{
     // -------------------------------------------------------------------------
     // js
     // -------------------------------------------------------------------------
-    ops['js']          = ops['js'] || {};
-    ops['js']['babel'] = ops['js']['babel'] || {};
-    let babelOps = ops['js']['babel'];
+    ops['babel'] = ops['babel'] || {};
+    let babelOps = ops['babel'];
     babelOps['minified'] = babelOps['minified'] !== undefined ? babelOps['minified'] : true;
     babelOps['comments'] = babelOps['comments'] !== undefined ? babelOps['comments'] : false;
 
@@ -99,66 +87,65 @@ let optionInit = ()=>{
     };
 }
 
-// =============================================================================
-// "_"から始まるファイルが変更された場合、結合リストを参照してファイルを結合する
-// =============================================================================
-let preConcat = (file)=>{
-    let fileName = path.basename(file.path);
-    let cwd      = process.cwd();
-    let is       = /^_/.test(fileName);
-    if(!is) return is;
-    let relativePath = path.relative(cwd, file.path);
-    relativePath = path.relative(conf.path.src.js, relativePath);
-    for(let key in conf.jsConcat){
-        let list = conf.jsConcat[key];
-        let has  = false;
-        for(let i = 0, l = list.length; i < l; i++){
-            if(list[i] === relativePath){
-                has = true;
-                break;
-            }
-        }
-        if(!has) continue;
-        let newList = [];
-        for(let i = 0, l = list.length; i < l; i++){
-            newList.push(path.join(conf.path.src.js, list[i]));
-        }
-        gulp.src(newList)
-            .pipe(concat(key))
-            .pipe(gulp.dest(conf.path.src.js)).on('end', function(){
-                conf.functions['js-build']('concat', key);
-            }, 1);
-    }
-    return is;
 
-};
-
+// /////////////////////////////////////////////////////////////////////////////
+//
+// TASKS
+//
+// /////////////////////////////////////////////////////////////////////////////
 conf.functions = {
     // =========================================================================
-    'js-build' : function(){
+    'js-concat' : function(done){
         if(conf.options.first) optionInit();
         let ops      = conf.options;
-        let babelOps = ops.js.babel;
-        let target;
-        let dest;
-        let var1 = arguments['0'];
-        let var2;
-        if(var1 === 'concat'){
-            var2   = arguments['1'];
-            target = path.join(conf.path.src.js, var2);
-        }else{
-            target = path.join(conf.path.src.js, '**/*.js');
+        let num      = 0;
+        let baseSrc  = conf.path.src.js;
+        let baseDest = conf.path.dest.js;
+        let list     = null;
+        if(!conf.concat){
+            done();
+            return false;
         }
-        dest = conf.path.dest.js;
-        return gulp.src(target)
-            .pipe( gulpIf( isWatching, changed(dest, ops.changed) ) )
-            .pipe( ignore.exclude(preConcat) )
-            .pipe(plumber(ops.plumber))
-            .pipe(sourcemaps.init())
-            .pipe(babel(babelOps))
-            .pipe(sourcemaps.write('.'))
-            .pipe(plumber.stop())
-            .pipe(gulp.dest(dest));
+        num = Object.keys(conf.concat).length;
+        if(!conf.concat){
+            done();
+            return false;
+        }
+        for(let key in conf.concat){
+            list = [];
+            for(let i = 0, l = conf.concat[key].length; i < l; i++){
+                list.push(path.join(baseSrc, conf.concat[key][i]));
+            }
+            gulp.src(list)
+                .pipe(gulpConcat(key))
+                .pipe(gulp.dest(baseDest))
+                .on('end', ()=>{
+                    num--;
+                    if(num === 0) done();
+                });
+        }
+        return false;
+    },
+    // =========================================================================
+    'js-build' : function(){
+        return runSequence('js-concat', ()=>{
+            if(conf.options.first) optionInit();
+            let ops      = conf.options;
+            let babelOps = ops.babel;
+            let cache    = isWatching;
+            let ignore   = '**/_*.js';
+            let target   = path.join(conf.path.src.js, '**/*.js');
+            let dest     = conf.path.dest.js;
+            return gulp.src(target)
+                .pipe(gulpIgnore(ignore))
+                .pipe( gulpIf( cache, gulpChanged(dest, ops.changed) ) )
+                .pipe(gulpPlumber(ops.plumber))
+                .pipe(gulpSourcemaps.init())
+                .pipe(gulpBabel(babelOps))
+                .pipe(gulpSourcemaps.write('.'))
+                .pipe(gulpPlumber.stop())
+                .pipe(gulp.dest(dest));
+        });
     },
     // =========================================================================
     'js-watch' : function(){
