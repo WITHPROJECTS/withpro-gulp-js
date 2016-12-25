@@ -25,7 +25,8 @@
   "devDependencies": {},
   "scripts": {
     "watch": "gulp js-watch",
-    "build": "gulp js-build"
+    "build": "gulp js-build",
+    "concat": "gulp js-concat"
   },
   "repository": {
     "type": "git",

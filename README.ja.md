@@ -3,8 +3,9 @@ JavaScriptの開発環境です。
 ## 使い方
 
 ```bash
-$ npm run js-watch # watching js file.
-$ npm run js-build # building js file.
+$ npm run js-watch  # watching js file.
+$ npm run js-build  # building js file.
+$ npm run js-concat # concat js file.
 ```
 
 ## 設定変更
@@ -62,7 +63,7 @@ keys.forEach((key)=>{
 ```
 conf : {
     ...
-    'jsConcat' : {
+    'concat' : {
         'hoge.js' : [
             'concat/_child1.js',
             'concat/_child2.js'
@@ -75,5 +76,5 @@ conf : {
 }
 ```
 
-jsConcatプロパティのキーはconf.path.src.jsからの相対的な出力パスです。  
+concatプロパティのキーはconf.path.src.jsからの相対的な出力パスです。  
 もし、キーを'concat/hoge.js'と設定したら、conf.path.src.js + concat/hoge.jsに出力されます。

@@ -1,15 +1,16 @@
-JS develop env.
+JavaScript develop env with Babel.
 
 ## Usage
 
 ```bash
 $ npm run js-watch # watching js file.
 $ npm run js-build # building js file.
+$ npm run js-concat # concat js file.
 ```
 
 ## Change configuration
 
-if only use it. you will change code on withpro-gulp-js.js.
+If only use it. you will change code on withpro-gulp-js.js.
 
 ```js
 conf : {
@@ -54,7 +55,7 @@ keys.forEach((key)=>{
 
 ## Concatenate
 
-you can concatenate any files.
+You can concatenate any files.
 
 1. partial files name is begin with "_".
 2. add set to concatenation config as follows.
@@ -62,7 +63,7 @@ you can concatenate any files.
 ```
 conf : {
     ...
-    'jsConcat' : {
+    'concat' : {
         'hoge.js' : [
             'concat/_child1.js',
             'concat/_child2.js'
@@ -75,5 +76,5 @@ conf : {
 }
 ```
 
-key of jsConcat property is output file path form conf.path.src.js.  
-if you set key as 'concat/hoge.js', output to conf.path.src.js + concat/hoge.js.
+Key of concat property is output file path form conf.path.src.js.  
+If you set key as 'concat/hoge.js', output to conf.path.src.js + concat/hoge.js.
