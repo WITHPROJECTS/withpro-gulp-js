@@ -118,7 +118,7 @@ conf.functions = {
             }
             gulp.src(list)
                 .pipe(gulpConcat(key))
-                .pipe(gulp.dest(baseDest))
+                .pipe(gulp.dest(baseSrc))
                 .on('end', ()=>{
                     num--;
                     if(num === 0) done();
