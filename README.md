@@ -1,79 +1,128 @@
-JavaScript develop env with Babel.
+JavaScript develop env with Gulp.
+
+# What this can do
+
+- watching and building of js files.
+- concatenate js files.
+
+# Install
+
+```
+$ npm i git+ssh://git@github.com:WITHPROJECTS/withpro-gulp-js.git
+```
 
 ## Usage
 
-```bash
-$ npm run js-watch # watching js file.
-$ npm run js-build # building js file.
-$ npm run js-concat # concat js file.
-```
-
-## Change configuration
-
-If only use it. you will change code on withpro-gulp-js.js.
-
 ```js
-conf : {
-    'path' : {
-        'project' : '/', // project root from web root.
-        'src' : {
-            'js' : 'src/js',   // js files dir.
-        },
-        'dest' : {
-            'js'   : 'build/js', // js files dir.
-        }
-    },
-    'browsers' : ['last 3 version'] // support level.
-}
-```
-
-Not so, when you wanna use it as local module.
-
-```js
+// gulpfile.js
 let gulp = require('gulp');
-let wgjs = require('withpro-gulp-js');
-
-// -----------------------------------------------------------------------------
-// change configuration.
-// wgs.path.src.js = 'assets/js';
-// -----------------------------------------------------------------------------
-
-let keys = Object.keys(wgjs.functions);
-keys.forEach((key)=>{
-    let f = withproGulpSass.functions;
-    if(Array.isArray(f[key])){
-        if(typeof f[key] === 'function'){
-            gulp.task(key, f[key][0]);
-        }else{
-            gulp.task(key, f[key][0], f[key][1]);
-        }
-    }else{
-        gulp.task(key, f[key]);
-    }
-});
+let conf = require('withpro-gulp-js');
+conf.init();
 ```
 
-## Concatenate
-
-You can concatenate any files.
-
-1. partial files name is begin with "_".
-2. add set to concatenation config as follows.
-
+## Watching
+```bash
+$ gulp js-watch
 ```
-conf : {
-    ...
-    'concat' : {
-        'hoge.js' : [
-            'concat/_child1.js',
-            'concat/_child2.js'
-        ],
-        'fuga.js' : [
-            'concat/_child3.js',
-            'concat/_child4.js'
-        ]
+
+## Building
+
+```bash
+$ gulp js-build
+```
+
+## Concatenating
+
+```bash
+$ gulp js-concat
+```
+```bash
+$
+```
+
+# Change configurations
+
+For example, You want to change source files and destribution files path.
+You can do it as follows.
+
+```js
+// gulpfile.js
+let gulp = require('gulp');
+let conf = require('withpro-gulp-js');
+
+conf.path = {
+    'project' : '/',
+    'src' : {
+        'js' : 'src/js'
+    },
+    'dest' : {
+        'js'   : 'build/js'
     }
 }
+
+conf.init();
+```
+
+Make sure to change the setting before "**init()**".
+
+## conf.path
+
+| Property | Type   | Default  |
+|----------|--------|----------|
+| project  | String | /        |
+| src.js   | String | src/js   |
+| dest.js  | String | build/js |
+
+## conf.options
+
+You can pass in task options to option objects.
+
+### conf.options.babel
+
+[gulp-babel](https://www.npmjs.com/package/gulp-babel) options.  
+Default options as follows.
+
+| Property | Default         |
+|----------|-----------------|
+| minified | true            |
+| comments | false           |
+| presets  | Described later |
+
+Using presets is [babel-preset-env](https://www.npmjs.com/package/babel-preset-env)  
+Default options as follows.
+
+```
+presets = ['env', {
+    'loose'    : true,
+    'modules'  : false,
+    'browsers' : conf.browsers
+}];
+```
+
+# Concatenating js files
+
+You can do to build after concatenate js files.
+
+1. The partial file name begin "_".
+2. Set concatenating list as follows.
+
+```js
+// gulpfile.js
+let gulp = require('gulp');
+let conf = require('./withpro-gulp-js');
+
+conf.concat = {
+    'common.js' : [
+        'partial/_a.js',
+        'partial/_b.js'
+    ],
+    'class/Video.js' : [
+        'class/_Sound.js',
+        'class/_Movie.js'
+    ]
+}
+
+conf.init();
 ```
 
 Key of concat property is output file path form conf.path.src.js.  

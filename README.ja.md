@@ -1,59 +1,103 @@
-JavaScriptの開発環境です。
+Gulpを使ったJavaScriptの開発環境です。
 
-## 使い方
+# 出来ること
+
+- jsファイルの監視とBabelを使ったビルド
+- jsファイルの結合
+
+# インストール
+
+```
+$ npm i git+ssh://git@github.com:WITHPROJECTS/withpro-gulp-js.git
+```
+
+# 使い方
+
+```js
+// gulpfile.js
+let gulp = require('gulp');
+let conf = require('withpro-gulp-js');
+conf.init();
+```
+
+## 監視
+```bash
+$ gulp js-watch
+```
+
+## ビルド
 
 ```bash
-$ npm run js-watch  # watching js file.
-$ npm run js-build  # building js file.
-$ npm run js-concat # concat js file.
-```
-
-## 設定変更
-
-単体で利用する場合、「withpro-gulp-js.js」を変更してください。
-
-```js
-conf : {
-    'path' : {
-        'project' : '/', // project root from web root.
-        'src' : {
-            'js' : 'src/js',   // js files dir.
-        },
-        'dest' : {
-            'js'   : 'build/js', // js files dir.
-        }
-    },
-    'browsers' : ['last 3 version'] // support level.
-}
-```
-
-local moduleとして利用する場合は
-
-```js
-let gulp = require('gulp');
-let wgjs = require('withpro-gulp-js');
-
-// -----------------------------------------------------------------------------
-// change configuration.
-// wgs.path.src.js = 'assets/js';
-// -----------------------------------------------------------------------------
-
-let keys = Object.keys(wgjs.functions);
-keys.forEach((key)=>{
-    let f = withproGulpSass.functions;
-    if(Array.isArray(f[key])){
-        if(typeof f[key] === 'function'){
-            gulp.task(key, f[key][0]);
-        }else{
-            gulp.task(key, f[key][0], f[key][1]);
-        }
-    }else{
-        gulp.task(key, f[key]);
-    }
-});
+$ gulp js-build
 ```
 
 ## ファイル結合
+
+```bash
+$ gulp js-concat
+```
+```bash
+$
+```
+
+# 設定変更
+
+出力先の変更などは以下の様にします。
+
+```js
+// gulpfile.js
+let gulp = require('gulp');
+let conf = require('./withpro-gulp-js');
+
+conf.path =  {
+    'project' : '/',
+    'src' : {
+        'js' : 'src/js'
+    },
+    'dest' : {
+        'js' : 'build/js'
+    }
+}
+conf.init();
+```
+
+設定の変更は必ず"**init()**"の前に行ってください。
+
+## conf.path
+
+| プロパティ | 型     | 初期値   |
+|------------|--------|----------|
+| project    | String | /        |
+| src.js     | String | src/js   |
+| dest.js    | String | build/js |
+
+## conf.options
+
+options オブジェクトにはタスクのオプションを渡すことができます。
+
+### conf.options.babel
+
+[gulp-babel](https://www.npmjs.com/package/gulp-babel)のオプション  
+以下のオプションがデフォルトで設定されています。
+
+| プロパティ   | 初期値 |
+|--------------|--------|
+| minified     | true   |
+| comments     | false  |
+| presets      | 後述   |
+
+presetsは[babel-preset-env](https://www.npmjs.com/package/babel-preset-env)を使っています。  
+デフォルトの設定は以下の通りです。
+
+```
+presets = ['env', {
+    'loose'    : true,
+    'modules'  : false,
+    'browsers' : conf.browsers
+}];
+```
+
+# ファイル結合
 
 複数のファイルを結合して出力することができます。
 
@@ -61,19 +105,22 @@ keys.forEach((key)=>{
 2. 結合リストを下記のように設定します。
 
 ```
-conf : {
-    ...
-    'concat' : {
-        'hoge.js' : [
-            'concat/_child1.js',
-            'concat/_child2.js'
-        ],
-        'fuga.js' : [
-            'concat/_child3.js',
-            'concat/_child4.js'
-        ]
-    }
+// gulpfile.js
+let gulp = require('gulp');
+let conf = require('./withpro-gulp-js');
+
+conf.concat = {
+    'common.js' : [
+        'partial/_a.js',
+        'partial/_b.js'
+    ],
+    'class/Video.js' : [
+        'class/_Sound.js',
+        'class/_Movie.js'
+    ]
 }
+
+conf.init();
 ```
 
 concatプロパティのキーはconf.path.src.jsからの相対的な出力パスです。  
