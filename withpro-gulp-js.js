@@ -22,7 +22,7 @@ let conf           = {
 // PATH SETTING
 //
 // /////////////////////////////////////////////////////////////////////////////
-let conf.path = {
+conf.path = {
     'project' : '/',
     'src'     : { 'js' : 'src/js' },
     'dest'    : { 'js' : 'build/js' }
@@ -56,7 +56,7 @@ conf.options.changed = {
 // =============================================================================
 // gulp-plumber option
 // 
-conf.options.changed = {
+conf.options.plumber = {
     'errorHandler' : function(err){
         let relativePath = err.fileName;
         relativePath = path.relative(process.cwd(), relativePath);
