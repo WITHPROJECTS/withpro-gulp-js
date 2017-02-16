@@ -9,7 +9,7 @@
     "npm": "^3.10.10"
   },
   "dependencies": {
-    "babel-preset-env": "0.0.9",
+    "babel-preset-env": "1.1.8",
     "colors": "^1.1.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
@@ -18,8 +18,8 @@
     "gulp-if": "^2.0.2",
     "gulp-ignore": "^2.0.2",
     "gulp-plumber": "^1.1.0",
-    "gulp-sourcemaps": "^1.9.1",
-    "node-notifier": "^4.6.1",
+    "gulp-sourcemaps": "^2.4.1",
+    "node-notifier": "^5.0.2",
     "run-sequence": "^1.2.2"
   },
   "devDependencies": {},
