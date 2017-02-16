@@ -1,12 +1,12 @@
 {
   "name": "withpro-gulp-js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "gulp js develop env.",
   "main": "withpro-gulp-js.js",
   "private": true,
   "engines": {
-    "node": "^6.9.1",
-    "npm": "^4.0.1"
+    "node": "^6.9.5",
+    "npm": "^3.10.10"
   },
   "dependencies": {
     "babel-preset-env": "0.0.9",

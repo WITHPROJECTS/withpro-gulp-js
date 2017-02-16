@@ -11,24 +11,21 @@ let gulpConcat     = require('gulp-concat');
 let gulpIgnore     = require('gulp-ignore');
 let runSequence    = require('run-sequence');
 let isWatching     = false;
-let isConcated     = false;
+let conf           = {
+    'path'     : {},
+    'options'  : {},
+    'browsers' : ['last 3 version']
+};
 
 // /////////////////////////////////////////////////////////////////////////////
 //
-// SETTING
+// PATH SETTING
 //
 // /////////////////////////////////////////////////////////////////////////////
-let conf = {
-    'path' : {
-        'project' : '/',
-        'src' : {
-            'js' : 'src/js'
-        },
-        'dest' : {
-            'js' : 'build/js'
-        }
-    },
-    'browsers' : ['last 3 version']
+let conf.path = {
+    'project' : '/',
+    'src'     : { 'js' : 'src/js' },
+    'dest'    : { 'js' : 'build/js' }
 }
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -36,47 +33,36 @@ let conf = {
 // OPTIONS
 //
 // /////////////////////////////////////////////////////////////////////////////
-conf.options = { first : true }
 // =============================================================================
-// オプションの初期設定
+// gulp-babel option
+// 
+conf.options.babel = {
+    'minified' : true,
+    'comments' : false,
+    'presets'  : [
+        ['env', {
+            'loose'    : true,
+            'modules'  : false,
+            'browsers' : conf.browsers
+        }]
+    ]
+};
 // =============================================================================
-let optionInit = ()=>{
-    let ops   = conf.options;
-    ops.first = false;
-    // -------------------------------------------------------------------------
-    // js
-    // -------------------------------------------------------------------------
-    ops['babel'] = ops['babel'] || {};
-    let babelOps = ops['babel'];
-    babelOps['minified'] = babelOps['minified'] !== undefined ? babelOps['minified'] : true;
-    babelOps['comments'] = babelOps['comments'] !== undefined ? babelOps['comments'] : false;
-
-    if(!babelOps['presets']){
-        babelOps['presets'] = [
-            ["env", {
-                'loose'    : true,
-                'modules'  : false,
-                'browsers' : conf.browsers
-            }]
-        ];
-    }
-    // -------------------------------------------------------------------------
-    // changed
-    // -------------------------------------------------------------------------
-    ops['changed'] = ops['changed'] || {};
-    let changedOps = ops['changed'];
-    changedOps['extension'] = changedOps['extension'] || '.js';
-    // -------------------------------------------------------------------------
-    // plumber
-    // -------------------------------------------------------------------------
-    ops['plumber'] = ops['plumber'] || {};
-    let plumberOps = ops['plumber'];
-    plumberOps['errorHandler'] = plumberOps['errorHandler'] || function(err){
-        $relativePath = err.fileName;
-        $relativePath = path.relative(process.cwd(), $relativePath);
+// gulp-changed option
+// 
+conf.options.changed = {
+    'extension' : '.js'
+};
+// =============================================================================
+// gulp-plumber option
+// 
+conf.options.changed = {
+    'errorHandler' : function(err){
+        let relativePath = err.fileName;
+        relativePath = path.relative(process.cwd(), relativePath);
         notifier.notify({
             'title'   : `JS ${err.name}`,
-            'message' : `${err.name} : ${$relativePath}\n{ Line : ${err.loc.line}, Column : ${err.loc.column} }`,
+            'message' : `${err.name} : ${relativePath}\n{ Line : ${err.loc.line}, Column : ${err.loc.column} }`,
             'sound'   : 'Pop'
         });
         console.log(`---------------------------------------------`.red.bold);
@@ -84,9 +70,8 @@ let optionInit = ()=>{
         console.error(err.stack.red.bold);
         console.log(`---------------------------------------------`.red.bold);
         gulp.emit('end');
-    };
-}
-
+    }
+};
 
 // /////////////////////////////////////////////////////////////////////////////
 //
@@ -96,7 +81,6 @@ let optionInit = ()=>{
 conf.functions = {
     // =========================================================================
     'js-concat' : function(done){
-        if(conf.options.first) optionInit();
         let ops      = conf.options;
         let num      = 0;
         let baseSrc  = conf.path.src.js;
@@ -129,7 +113,6 @@ conf.functions = {
     // =========================================================================
     'js-build' : function(){
         return runSequence('js-concat', ()=>{
-            if(conf.options.first) optionInit();
             let ops      = conf.options;
             let babelOps = ops.babel;
             let cache    = isWatching;
@@ -149,7 +132,6 @@ conf.functions = {
     },
     // =========================================================================
     'js-watch' : function(){
-        if(conf.options.first) optionInit();
         isWatching = true;
         let target = path.join(conf.path.src.js, '**/*.js');
         gulp.watch(target, ['js-build']);
