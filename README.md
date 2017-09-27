@@ -1,15 +1,9 @@
-JavaScript develop env with Gulp.
+JavaScript(Babel) development environment for web site.
 
 # What this can do
 
 - watching and building of js files.
 - concatenate js files.
-
-# Install
-
-```
-$ npm i git+ssh://git@github.com:WITHPROJECTS/withpro-gulp-js.git
-```
 
 ## Usage
 
@@ -22,22 +16,19 @@ conf.init();
 
 ## Watching
 ```bash
-$ gulp js-watch
+$ npm run watch
 ```
 
 ## Building
 
 ```bash
-$ gulp js-build
+$ npm run build
 ```
 
 ## Concatenating
 
 ```bash
-$ gulp js-concat
-```
-```bash
-$
+$ npm run concat
 ```
 
 # Change configurations

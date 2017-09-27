@@ -1,6 +1,6 @@
 {
   "name": "withpro-gulp-js",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "description": "gulp js develop env.",
   "main": "withpro-gulp-js.js",
   "private": true,

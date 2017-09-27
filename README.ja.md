@@ -1,15 +1,9 @@
-Gulpを使ったJavaScriptの開発環境です。
+webサイト向けJavaScript(Babel)開発環境
 
 # 出来ること
 
 - jsファイルの監視とBabelを使ったビルド
 - jsファイルの結合
-
-# インストール
-
-```
-$ npm i git+ssh://git@github.com:WITHPROJECTS/withpro-gulp-js.git
-```
 
 # 使い方
 
@@ -22,19 +16,19 @@ conf.init();
 
 ## 監視
 ```bash
-$ gulp js-watch
+$ npm run watch
 ```
 
 ## ビルド
 
 ```bash
-$ gulp js-build
+$ npm run build
 ```
 
 ## ファイル結合
 
 ```bash
-$ gulp js-concat
+$ npm run concat
 ```
 ```bash
 $
