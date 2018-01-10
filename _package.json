@@ -1,23 +1,32 @@
 {
   "name": "withpro-gulp-js",
-  "version": "1.0.0",
+  "version": "0.2.5",
   "description": "gulp js develop env.",
   "main": "withpro-gulp-js.js",
   "private": true,
   "engines": {
-    "node": "^8.9.3",
-    "npm": "^5.6.0"
+    "node": "^6.11.2",
+    "npm": "^5.3.0"
   },
   "dependencies": {
-    "babel-preset-env": "^1.6.1",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "colors": "^1.1.2",
+    "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
+    "gulp-changed": "^3.1.0",
     "gulp-concat": "^2.6.1",
     "gulp-if": "^2.0.2",
-    "gulp-task-assist": "git+ssh://git@github.com/WITHPROJECTS/gulp-task-assist.git#v0.0.1"
+    "gulp-ignore": "^2.0.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "node-notifier": "^5.0.2",
+    "run-sequence": "^2.2.0"
   },
   "scripts": {
-    "watch:js": "gulp watch:js",
-    "build:js": "gulp build:js"
+    "watch": "gulp js-watch",
+    "build": "gulp js-build",
+    "concat": "gulp js-concat"
   },
   "repository": {
     "type": "git",

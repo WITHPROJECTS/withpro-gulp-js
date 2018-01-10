@@ -1,4 +1,12 @@
-let conf = require('./withpro-gulp-js');
-let gulp = require('gulp');
+const path = require('path');
+let task = require('./withpro-gulp-js');
 
-conf.init();
+// console.log(__dirname);
+
+task
+    .setPath( 'input', {
+        'root' : path.join( __dirname, 'src' )
+    })
+    .setPath( 'input', {
+        'root' : path.join( __dirname, 'build' )
+    });
