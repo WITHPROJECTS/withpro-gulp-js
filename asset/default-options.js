@@ -12,6 +12,13 @@ options['concat'] = {
     'list' : false
 }
 /**
+ * concatの設定
+ *
+ */
+options['changed'] = {
+    'extension' : 'js'
+}
+/**
  * babelの設定
  *
  */
@@ -30,6 +37,17 @@ options['babel'] = {
     ]
 }
 /**
+ * sourcemaps
+ * 
+ */
+options['sourcemaps'] = {
+    'use'   : true,
+    'init'  : {},
+    'write' : {
+        includeContent : true
+    }
+}
+/**
  * plumberの設定
  *
  */
@@ -37,10 +55,13 @@ options['plumber'] = {
     'sound'        : 'Pop',
     'errorHandler' : function(err) {
         if ( err ) {
+            // console.log(processs.cwd());
+            // err.fileName
+            console.log(err);
             console.error(err.message);
             notifier.notify({
-                'title'   : `Sass ${err.name}`,
-                'message' : `${err.name} : ${err.relativePath}\n{ Line : ${err.line}, Column : ${err.column} }`,
+                'title'   : `JS ${err.name}`,
+                'message' : `${err.name} : ${err.relativePath}\n{ Line : ${err.loc.line}, Column : ${err.loc.column} }`,
                 'sound'   : options['plumber']['sound']
             });
         }

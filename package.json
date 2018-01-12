@@ -9,11 +9,18 @@
     "npm": "^5.6.0"
   },
   "dependencies": {
+    "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "gulp": "^4.0.0",
     "gulp-babel": "^7.0.0",
+    "gulp-changed": "^3.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-if": "^2.0.2",
-    "gulp-task-assist": "git+ssh://git@github.com/WITHPROJECTS/gulp-task-assist.git#v0.0.1"
+    "gulp-plumber": "^1.2.0",
+    "gulp-sourcemaps": "^2.6.3",
+    "gulp-tap": "^1.0.1",
+    "gulp-task-assist": "git+ssh://git@github.com/WITHPROJECTS/gulp-task-assist.git",
+    "node-notifier": "^5.1.2"
   },
   "scripts": {
     "watch:js": "gulp watch:js",
