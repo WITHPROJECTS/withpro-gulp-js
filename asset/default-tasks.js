@@ -83,7 +83,6 @@ tasks['build:js'] = {
         )
     },
     'task' : function( done ) {
-        console.log('build task');
         let status        = this.status;
         let ops           = this.options;
         let useConcat     = ops.concat.use;
